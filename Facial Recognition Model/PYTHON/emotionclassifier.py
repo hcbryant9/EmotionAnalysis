@@ -43,3 +43,14 @@ print("Random Forest Accuracy:", accuracy_score(y_test, rf_predictions))
 
 print("\nDecision Tree Classification Report:\n", classification_report(y_test, dt_predictions))
 print("Random Forest Classification Report:\n", classification_report(y_test, rf_predictions))
+
+
+new_data = pd.read_csv('sample_single_emotion.csv')
+
+# Make Predictions
+new_predictions_dt = dt_classifier.predict(new_data)
+new_predictions_rf = rf_classifier.predict(new_data)
+
+# Print predictions
+print("Decision Tree Predictions:", new_predictions_dt)
+print("Random Forest Predictions:", new_predictions_rf)
