@@ -7,12 +7,11 @@ app = Flask(__name__)
 def receive_data():
     data = request.get_json()
 
-    # Do something with the received data
-    print("Received data from Unity:", data)
+    # Write the received data to a text file
+    with open('data_log.txt', 'a') as file:
+        file.write(str(data) + '\n')
 
-    # You can process the data here as needed
-    # For example, you can store it in a database, write to a file, etc.
-
+    # Respond to the client
     return 'Data received successfully!', 200
 
 if __name__ == '__main__':
