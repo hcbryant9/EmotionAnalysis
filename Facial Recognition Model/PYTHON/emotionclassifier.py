@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib
 
 # Step 1: Load the CSV Data
-data = pd.read_csv('sample_data.csv')
+data = pd.read_csv('unity_collection.csv')
 
 # Step 2: Preprocess the Data
 X = data.drop('Emotion', axis=1)  # Features (all landmarks)
@@ -45,12 +45,12 @@ print("\nDecision Tree Classification Report:\n", classification_report(y_test, 
 print("Random Forest Classification Report:\n", classification_report(y_test, rf_predictions))
 
 
-new_data = pd.read_csv('sample_single_emotion.csv')
+#new_data = pd.read_csv('sample_single_emotion.csv')
 
 # Make Predictions
-new_predictions_dt = dt_classifier.predict(new_data)
-new_predictions_rf = rf_classifier.predict(new_data)
+#new_predictions_dt = dt_classifier.predict(new_data)
+#new_predictions_rf = rf_classifier.predict(new_data)
 
 # Print predictions
-print("Decision Tree Predictions:", new_predictions_dt)
-print("Random Forest Predictions:", new_predictions_rf)
+#print("Decision Tree Predictions:", new_predictions_dt)
+#print("Random Forest Predictions:", new_predictions_rf)
