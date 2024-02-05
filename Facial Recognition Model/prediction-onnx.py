@@ -5,7 +5,6 @@ import onnxruntime as ort
 dt_model = ort.InferenceSession('models/decision_tree_model.onnx')
 rf_model = ort.InferenceSession('models/random_forest_model.onnx')
 
-# Example new_data (replace this with your actual new data for prediction)
 # Assuming it's in a format similar to the training data
 new_data = pd.read_csv('data/sample_single_emotion.csv')
 

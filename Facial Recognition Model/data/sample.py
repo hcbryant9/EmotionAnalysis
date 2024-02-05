@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+'''This program generates a csv file with the appropriate labels'''
 
 # Generating sample data (random numbers here, replace this with actual data)
 num_samples = 1  # Number of samples

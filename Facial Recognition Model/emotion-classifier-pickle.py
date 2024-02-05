@@ -1,3 +1,4 @@
+# This file creates an ML model for .pkl
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -6,13 +7,13 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib
 
 # Step 1: Load the CSV Data
-data = pd.read_csv('unity_collection.csv')
+data = pd.read_csv('data/unity_collection.csv')
 
 # Step 2: Preprocess the Data
 X = data.drop('Emotion', axis=1)  # Features (all landmarks)
 y = data['Emotion']  # Labels (emotions)
 
-# Step 3: Split the Data into Training and Testing Sets
+# Step 3: Split the Data into Training and Testing Set
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Step 4: Train the Models
@@ -43,14 +44,3 @@ print("Random Forest Accuracy:", accuracy_score(y_test, rf_predictions))
 
 print("\nDecision Tree Classification Report:\n", classification_report(y_test, dt_predictions))
 print("Random Forest Classification Report:\n", classification_report(y_test, rf_predictions))
-
-
-#new_data = pd.read_csv('sample_single_emotion.csv')
-
-# Make Predictions
-#new_predictions_dt = dt_classifier.predict(new_data)
-#new_predictions_rf = rf_classifier.predict(new_data)
-
-# Print predictions
-#print("Decision Tree Predictions:", new_predictions_dt)
-#print("Random Forest Predictions:", new_predictions_rf)
