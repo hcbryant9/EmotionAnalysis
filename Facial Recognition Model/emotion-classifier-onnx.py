@@ -1,4 +1,4 @@
-# This file creates an ML model for .onnx
+# This file creates an ML model for .onnx and is a slight variation of the emotion-classifier-pickle.py
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier

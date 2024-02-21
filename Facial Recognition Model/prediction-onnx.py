@@ -1,3 +1,4 @@
+#This file makes predictions based off the train .onnx file & is a slight variation of predicition-onnx.py
 import pandas as pd
 import onnxruntime as ort
 

@@ -1,4 +1,4 @@
-#This file makes predictions
+#This file makes predictions based off the train .pkl file
 import pandas as pd
 import joblib
 

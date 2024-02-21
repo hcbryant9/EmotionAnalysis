@@ -1,5 +1,8 @@
 import requests
-
+''' 
+This script was created to test the functionality of unity_data_receiver.py and its routes
+The advantage of testing with this script is so you do not need to headset & unity to check the routes
+'''
 # URL of the Flask server
 RECEIVE_DATA_URL = 'http://localhost:5000/receive_data'
 PREDICT_URL = 'http://localhost:5000/predict'
