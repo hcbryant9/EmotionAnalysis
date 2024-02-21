@@ -24,57 +24,47 @@ def receive_data():
         writer = csv.writer(file)
         writer.writerow(data)
 
-    prediction = replace_second_line(data)
+    # Respond to the client with successful message
+    return jsonify({"message": "Data received successfully"}), 200
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+
+    # Make prediction on the received data
+    prediction = make_prediction(data)
 
     # Respond to the client with predictions dt and rf
     return jsonify(prediction), 200
 
-#This function is devious but just drops the emotion classifier and replaces the second line in the csv file 'single_emotion.csv'
-def replace_second_line(data):
+@app.route('/predict_while_collect', methods=['POST'])
+def predict_while_collect():
+    '''
+    This route was created to be able to predict while collecting data from user
+    While collecting data, Unity sends the emotion appended to the data
+    This route drops that emotion and returns the prediction
+    '''
+    data = request.get_json()
 
-    # Remove the last element (emotion) from the data
-    data_without_emotion = data[:-1]
+    new_data = data[:-1]
 
-    # Read the existing content of the CSV file
-    with open('single_emotion.csv', 'r') as file:
-        lines = file.readlines()
+    prediction = make_prediction(new_data)
 
-    # Modify the second line with the received data
-    lines[1] = ','.join(str(elem) for elem in data_without_emotion) + '\n'
-
-    # Write the modified content back to the CSV file
-    with open('single_emotion.csv', 'w') as file:
-        file.writelines(lines)
-
-    # Make prediction and return the result
-    return make_prediction()
+    return jsonify(prediction), 200
 
 #This script makes a prediction of the data stored in the second line in the csv file 'single_emotion.csv'
-def make_prediction():
+def make_prediction(data):
     
  
     dt_classifier = joblib.load('models/pickle/decision_tree_model.pkl')
     rf_classifier = joblib.load('models/pickle/random_forest_model.pkl')
 
-    new_data = pd.read_csv('single_emotion.csv')
+    new_data = pd.DataFrame([data]) #convert received data to dataframes
 
     
     new_predictions_dt = dt_classifier.predict(new_data)
     new_predictions_rf = rf_classifier.predict(new_data)
 
-    
-
-    ''' showing the probability has been disabled for now to simplify the process of returning predictions to Unity 
-
-    if hasattr(dt_classifier, 'predict_proba'):
-        dt_proba = dt_classifier.predict_proba(new_data)
-        print("Decision Tree Probability Estimates:", dt_proba)
-
-    if hasattr(rf_classifier, 'predict_proba'):
-        rf_proba = rf_classifier.predict_proba(new_data)
-        print("Random Forest Probability Estimates:", rf_proba)
-
-    '''
 
     print("Decision Tree Predictions:", new_predictions_dt)
     print("Random Forest Predictions:", new_predictions_rf)
@@ -83,9 +73,6 @@ def make_prediction():
     'decision_tree_predictions': new_predictions_dt.tolist(),
     'random_forest_predictions': new_predictions_rf.tolist()
 }
-
-
-
 
 if __name__ == '__main__':
     # Run the server on port 5000
