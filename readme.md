@@ -1,6 +1,6 @@
 # Facial Recognition Model for Emotion Analysis
 
-###Overview
+### Overview
 The following repository is comprised of python scripts & csv files written and collected through the Fall 23' and Spring 24'
 semesters at Virginia Commonwealth University. The data collected is facial tracking from the Meta Quest Pro using the Oculus SDK in Unity.
 
