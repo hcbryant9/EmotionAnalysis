@@ -1,0 +1,16 @@
+"Happy: 3/10
+Sad: 2/10
+Mad: 1/10
+Scared: 4/10"
+"Happy: 1/10
+Sad: 1/10
+Mad: 1/10
+Scared: 1/10"
+"Happy: 6/10
+Sad: 2/10
+Mad: 2/10
+Scared: 3/10"
+"Happy: 8/10
+Sad: 0/10
+Mad: 0/10
+Scared: 0/10"

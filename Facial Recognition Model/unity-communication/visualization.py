@@ -1,4 +1,4 @@
-'''
+
 import matplotlib.pyplot as plt
 from threading import Thread
 
@@ -56,4 +56,3 @@ def start_plotting_thread():
 
 # You should call start_plotting_thread() before running the server
 start_plotting_thread()
-'''

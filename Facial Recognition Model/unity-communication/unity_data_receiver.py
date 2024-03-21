@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import csv
+import os
 import pandas as pd
 import joblib
 import numpy as np
+from prometheus_client import start_http_server, Counter, generate_latest
 
-import random
 
 #from visualization import update_emotion_probability, plot_emotion_graphs
 ''' 
@@ -18,13 +19,14 @@ The way this is done is that it opens 'single_emotion.csv' and replaces the 2nd 
 not including the specified emotion. Then sends this to the .pkl files found in models and returns the results.
 '''
 app = Flask(__name__)
-
+# Define a counter metric for counting predictions
+prediction_counter = Counter('predictions_total', 'Total number of predictions made')
 
 # Route to receive data from the Unity game
 @app.route('/receive_data', methods=['POST'])
 def receive_data():
     '''
-    This route is for collecting data only
+    This route is for collecting data only for facial data
     '''
     data = request.get_json()
 
@@ -46,6 +48,9 @@ def predict():
     # Make prediction on the received data
     prediction = make_prediction(data)
 
+    # Increment the prediction counter
+    prediction_counter.inc()
+
     # Respond to the client with predictions dt and rf
     return jsonify(prediction), 200
 
@@ -61,9 +66,54 @@ def predict_while_collect():
     new_data = data[:-1]
 
     prediction = make_prediction(new_data)
+    
 
     return jsonify(prediction), 200
 
+@app.route('/receive_voice_emotion', methods=['POST'])
+def receive_voice_emotion():
+    '''
+    This route is for receiving the results of chat gpt emotion prediction
+    The result will be stored and sent on to prometheus
+    '''
+    data = request.data.decode('utf-8')
+    
+    # Process data here, assuming it was successful
+    response_data = {"message": "Voice emotion received successfully"}
+
+    # Writing data to a .txt file in CSV format
+    file_path = 'data/sentiment/data.txt'
+    with open(file_path, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerow([data])
+        
+    return jsonify(response_data), 200
+
+@app.route('/receive_stt', methods=['POST'])
+def receive_stt():
+    '''
+    This route is for receiving the speech to text from WitAI in Unity
+    The result will be stored and sent on to prometheus
+    '''
+    data = request.data.decode('utf-8')
+    
+    # Process data here, assuming it was successful
+    response_data = {"message": "Speech to text received successfully"}
+
+    # Writing data to a .txt file in CSV format
+    file_path = 'data/stt/data.txt'
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerow([data])
+
+    return jsonify(response_data), 200
+
+    
+# Route to expose Prometheus metrics
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype="text/plain")
 
 #This script makes a prediction
 def make_prediction(data):
@@ -105,5 +155,7 @@ def make_prediction(data):
 
 
 if __name__ == '__main__':
+    # Start HTTP server to expose metrics on port 8000 to prometheus
+    start_http_server(8000)
     # Run the server on port 5000
     app.run(host='0.0.0.0', port=5000)
