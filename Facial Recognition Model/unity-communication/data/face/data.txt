@@ -1,0 +1,10 @@
+{"random_forest": {"emotion": "sad", "probability": 0.75}}
+{"random_forest": {"emotion": "angry", "probability": 0.82}}
+{"random_forest": {"emotion": "happy", "probability": 0.91}}
+{"random_forest": {"emotion": "surprised", "probability": 0.67}}
+{"random_forest": {"emotion": "neutral", "probability": 0.63}}
+{"random_forest": {"emotion": "disgusted", "probability": 0.78}}
+{"random_forest": {"emotion": "fearful", "probability": 0.69}}
+{"random_forest": {"emotion": "calm", "probability": 0.88}}
+{"random_forest": {"emotion": "surprised", "probability": 0.79}}
+{"random_forest": {"emotion": "angry", "probability": 0.95}}

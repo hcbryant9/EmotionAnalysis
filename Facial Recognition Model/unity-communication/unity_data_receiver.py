@@ -4,6 +4,8 @@ import os
 import pandas as pd
 import joblib
 import numpy as np
+import re
+import json
 from prometheus_client import start_http_server, Counter, generate_latest
 
 
@@ -19,8 +21,9 @@ The way this is done is that it opens 'single_emotion.csv' and replaces the 2nd 
 not including the specified emotion. Then sends this to the .pkl files found in models and returns the results.
 '''
 app = Flask(__name__)
-# Define a counter metric for counting predictions
-prediction_counter = Counter('predictions_total', 'Total number of predictions made')
+FACE_PATH = 'data/face/data.txt'
+STT_PATH = 'data/stt/data.txt'
+SENTIMENT_PATH = 'data/sentiment/data.txt'
 
 # Route to receive data from the Unity game
 @app.route('/receive_data', methods=['POST'])
@@ -48,8 +51,9 @@ def predict():
     # Make prediction on the received data
     prediction = make_prediction(data)
 
-    # Increment the prediction counter
-    prediction_counter.inc()
+    # Write the prediction to a file for visualization
+    with open('data/face/data.txt', 'a') as file:
+        file.write(str(prediction) + '\n')
 
     # Respond to the client with predictions dt and rf
     return jsonify(prediction), 200
@@ -109,53 +113,96 @@ def receive_stt():
 
     return jsonify(response_data), 200
 
-    
-# Route to expose Prometheus metrics
+
+
 @app.route('/metrics')
 def metrics():
-    return Response(generate_latest(), mimetype="text/plain")
+    '''
+    Expose Prometheus metrics including data received via STT, sentiment, and face predictions for visualization
+    '''
+    # Example metrics based on data counts
+    stt_data_metric = get_last_stt(STT_PATH)
+    sentiment_data_metric = get_last_sentiment(SENTIMENT_PATH)
+    face_data_metric = get_last_face(FACE_PATH)
+
+    # Construct Prometheus exposition format response
+    metrics_text = (
+        f"# HELP stt_data_metric Description of STT data metric\n"
+        f"# TYPE stt_data_metric gauge\n"
+        f"stt_data_metric {stt_data_metric}\n"
+        f"# HELP sentiment_data_metric Description of sentiment data metric\n"
+        f"# TYPE sentiment_data_metric gauge\n"
+        f"sentiment_data_metric {sentiment_data_metric}\n"
+        f"# HELP face_data_metric Description of face data metric\n"
+        f"# TYPE face_data_metric gauge\n"
+        f"face_data_metric {face_data_metric}\n"
+    )
+
+    # Return the response with the metrics text and appropriate content type
+    return Response(metrics_text, mimetype='text/plain')
+
 
 #This script makes a prediction
 def make_prediction(data):
-    dt_classifier = joblib.load('models/pickle/decision_tree_model.pkl')
     rf_classifier = joblib.load('models/pickle/random_forest_model.pkl')
 
     new_data = pd.DataFrame([data])  #convert received data to a DataFrame
-
-    #predict probabilities for each class
-    proba_dt = dt_classifier.predict_proba(new_data)
-    proba_rf = rf_classifier.predict_proba(new_data)
-
-    #return the value with the highest probability (that is the probability of the emotion predicted)
-    prob_value_dt = np.max(proba_dt)
+    proba_rf = rf_classifier.predict_proba(new_data) #return the value with the highest probability (that is the probability of the emotion predicted)
     prob_value_rf = np.max(proba_rf)
-
     # get the emotion
     # todo -> whatever has the highest probability -> index of 3 means sad, save a prediction. ?
-    predicted_class_index_dt = dt_classifier.predict(new_data)[0]
     predicted_class_index_rf = rf_classifier.predict(new_data)[0]
-
     #todo -> add datavis
-    #update_emotion_probability(predicted_class_index_rf, prob_value_rf)
-    #plot_emotion_graphs()
     return {
-        'decision_tree': {
-            'emotion': predicted_class_index_dt,
-            'probability': prob_value_dt
-
-        },
         'random_forest': {
             'emotion': predicted_class_index_rf,
             'probability': prob_value_rf
         }
     } 
 
-    
+# Function to get the last non-empty line of a file
+def get_last_stt(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        non_empty_lines = [line.strip() for line in lines if line.strip()]  # Remove empty lines
+        if non_empty_lines:
+            return non_empty_lines[-1]
+        else:
+            return ""
+# Function to get the most recent sentiment data
+def get_last_sentiment(file_path):
+    # Read the content of the file
+    with open(file_path, 'r') as file:
+        content = file.read()
 
+    # Use regular expression to find all entries within double quotes
+    entries = re.findall('"([^"]+)"', content)
 
+    # Return the most recent entry
+    if entries:
+        return entries[-1]
+    else:
+        return None
+
+def get_last_face(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        if lines:
+            # Get the last line in the file
+            last_line = lines[-1].strip()
+            # Assuming the data is stored in JSON format, you can parse it
+            prediction_data = json.loads(last_line)
+            # Extract emotion and probability from the prediction data
+            emotion = prediction_data['random_forest']['emotion']
+            probability = prediction_data['random_forest']['probability']
+            return emotion, probability
+        else:
+            return None, None
 
 if __name__ == '__main__':
     # Start HTTP server to expose metrics on port 8000 to prometheus
     start_http_server(8000)
     # Run the server on port 5000
     app.run(host='0.0.0.0', port=5000)
+
+

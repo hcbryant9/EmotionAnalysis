@@ -61,7 +61,5 @@ def send_data_receive_prediction(data):
         print("Error occurred:", str(e))
 
 if __name__ == "__main__":
-    # Send the sample data to the server
-    #send_data_to_server(sample_data)
-    #predict_collected_data(sample_data)
+    
     send_data_receive_prediction(predict_sample_data)
