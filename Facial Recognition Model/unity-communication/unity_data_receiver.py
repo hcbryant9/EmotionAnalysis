@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, make_response
 import csv
 import os
 import pandas as pd
@@ -7,7 +7,7 @@ import numpy as np
 import re
 import json
 from prometheus_client import start_http_server, Counter, generate_latest
-
+import warnings
 
 #from visualization import update_emotion_probability, plot_emotion_graphs
 ''' 
@@ -24,6 +24,10 @@ app = Flask(__name__)
 FACE_PATH = 'data/face/data.txt'
 STT_PATH = 'data/stt/data.txt'
 SENTIMENT_PATH = 'data/sentiment/data.txt'
+
+# Define a dictionary to store emotion probabilities
+sentiment_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Scared": 0.0}
+face_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Anxious": 0.0}
 
 # Route to receive data from the Unity game
 @app.route('/receive_data', methods=['POST'])
@@ -49,8 +53,9 @@ def predict():
     data = request.get_json()
 
     # Make prediction on the received data
+    warnings.filterwarnings("ignore")
     prediction = make_prediction(data)
-
+    warnings.filterwarnings("ignore")
     # Write the prediction to a file for visualization
     with open('data/face/data.txt', 'a') as file:
         file.write(str(prediction) + '\n')
@@ -74,6 +79,7 @@ def predict_while_collect():
 
     return jsonify(prediction), 200
 
+
 @app.route('/receive_voice_emotion', methods=['POST'])
 def receive_voice_emotion():
     '''
@@ -83,15 +89,31 @@ def receive_voice_emotion():
     data = request.data.decode('utf-8')
     
     # Process data here, assuming it was successful
-    response_data = {"message": "Voice emotion received successfully"}
+    # Assuming data is in the format "Happy: 9/10 Sad: 1/10 Mad: 1/10 Scared: 1/10"
+    emotions = data.split()
+    emotion_values = [float(emotion.split('/')[0]) / 10 for emotion in emotions[1::2]]
+    emotion_labels = ["Happy", "Sad", "Mad", "Scared"]  # Assuming this order of emotions
+    
+    # Update emotion probabilities
+    for label, value in zip(emotion_labels, emotion_values):
+        sentiment_probability[label] = value
 
-    # Writing data to a .txt file in CSV format
+    # Convert to JSON format
+    json_data = []
+    for label, value in sentiment_probability.items():
+        json_data.append({"emotion": label.lower(), "probability": value})
+
+    # Writing data to a .txt file
     file_path = 'data/sentiment/data.txt'
     with open(file_path, 'a') as file:
-        writer = csv.writer(file)
-        writer.writerow([data])
-        
-    return jsonify(response_data), 200
+        for item in json_data:
+            file.write(str(item) + '\n')
+
+    response_data = {"message": "Voice emotion received successfully"}
+
+    return jsonify(response_data)
+
+
 
 @app.route('/receive_stt', methods=['POST'])
 def receive_stt():
@@ -120,45 +142,76 @@ def metrics():
     '''
     Expose Prometheus metrics including data received via STT, sentiment, and face predictions for visualization
     '''
-    # Example metrics based on data counts
+    # Retrieve data metrics
     stt_data_metric = get_last_stt(STT_PATH)
-    sentiment_data_metric = get_last_sentiment(SENTIMENT_PATH)
-    face_data_metric = get_last_face(FACE_PATH)
-
+    happy_sentiment_metric = face_probability["Happy"]
+    
+    
     # Construct Prometheus exposition format response
     metrics_text = (
-        f"# HELP stt_data_metric Description of STT data metric\n"
-        f"# TYPE stt_data_metric gauge\n"
-        f"stt_data_metric {stt_data_metric}\n"
-        f"# HELP sentiment_data_metric Description of sentiment data metric\n"
-        f"# TYPE sentiment_data_metric gauge\n"
-        f"sentiment_data_metric {sentiment_data_metric}\n"
-        f"# HELP face_data_metric Description of face data metric\n"
-        f"# TYPE face_data_metric gauge\n"
-        f"face_data_metric {face_data_metric}\n"
+        f"# HELP happy_face_metric Probability of Happy Emotion from Face Prediction Model"
+        f"# TYPE happy_face_metric gauge\n"
+        f"happy_face_metric {face_probability['Happy']}\n"
+        f"# HELP sad_face_metric Probability of Sad Emotion from Face Prediction Model"
+        f"# TYPE sad_face_metric gauge\n"
+        f"sad_face_metric {face_probability['Sad']}\n"
+        f"# HELP mad_face_metric Probability of Mad Emotion from Face Prediction Model"
+        f"# TYPE mad_face_metric gauge\n"
+        f"mad_face_metric {face_probability['Mad']}\n"
+        f"# HELP anxious_face_metric Probability of Anxious Emotion from Face Prediction Model"
+        f"# TYPE anxious_face_metric gauge\n"
+        f"anxious_face_metric {face_probability['Anxious']}\n"
+        f"# HELP happy_sentiment_metric Probability of Happy Emotion from STT"
+        f"# TYPE happy_sentiment_metric gauge\n"
+        f"happy_sentiment_metric {sentiment_probability['Happy']}\n"
+        f"# HELP sad_sentiment_metric Probability of Sad Emotion from STT"
+        f"# TYPE sad_sentiment_metric gauge\n"
+        f"sad_sentiment_metric {sentiment_probability['Sad']}\n"
+        f"# HELP mad_sentiment_metric Probability of Mad Emotion from STT"
+        f"# TYPE mad_sentiment_metric gauge\n"
+        f"mad_sentiment_metric {sentiment_probability['Mad']}\n"
+        f"# HELP anxious_sentiment_metric Probability of Anxious Emotion from STT"
+        f"# TYPE anxious_sentiment_metric gauge\n"
+        f"anxious_sentiment_metric {sentiment_probability['Scared']}\n"
+        
     )
 
-    # Return the response with the metrics text and appropriate content type
-    return Response(metrics_text, mimetype='text/plain')
+    # Create a response with the metrics text
+    response = make_response(metrics_text)
+    response.mimetype = "text/plain"
+    return response
+
+
+
 
 
 #This script makes a prediction
 def make_prediction(data):
+    warnings.filterwarnings("ignore")
     rf_classifier = joblib.load('models/pickle/random_forest_model.pkl')
 
     new_data = pd.DataFrame([data])  #convert received data to a DataFrame
     proba_rf = rf_classifier.predict_proba(new_data) #return the value with the highest probability (that is the probability of the emotion predicted)
     prob_value_rf = np.max(proba_rf)
+    
     # get the emotion
-    # todo -> whatever has the highest probability -> index of 3 means sad, save a prediction. ?
     predicted_class_index_rf = rf_classifier.predict(new_data)[0]
-    #todo -> add datavis
+    
+    # Update face probabilities
+    for emotion in face_probability:
+        if emotion == predicted_class_index_rf:
+            face_probability[emotion] = prob_value_rf
+        else:
+            face_probability[emotion] = 0.0
+
+    # Return prediction
     return {
         'random_forest': {
             'emotion': predicted_class_index_rf,
             'probability': prob_value_rf
         }
     } 
+
 
 # Function to get the last non-empty line of a file
 def get_last_stt(file_path):
@@ -169,20 +222,7 @@ def get_last_stt(file_path):
             return non_empty_lines[-1]
         else:
             return ""
-# Function to get the most recent sentiment data
-def get_last_sentiment(file_path):
-    # Read the content of the file
-    with open(file_path, 'r') as file:
-        content = file.read()
 
-    # Use regular expression to find all entries within double quotes
-    entries = re.findall('"([^"]+)"', content)
-
-    # Return the most recent entry
-    if entries:
-        return entries[-1]
-    else:
-        return None
 
 def get_last_face(file_path):
     with open(file_path, 'r') as file:

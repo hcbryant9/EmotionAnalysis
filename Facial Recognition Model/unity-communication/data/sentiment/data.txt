@@ -1,290 +1,132 @@
-"Happy: 3/10
-Sad: 2/10
-Mad: 1/10
-Scared: 4/10"
-"Happy: 1/10
-Sad: 1/10
-Mad: 1/10
-Scared: 1/10"
-"Happy: 6/10
-Sad: 2/10
-Mad: 2/10
-Scared: 3/10"
-"Happy: 8/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 6/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 8/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 9/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 7/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 8/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 5/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"I'm sorry, but I need a statement that expresses an emotion for me to analyze. Could you please provide a statement with an emotion so I can assess it for you?"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"I'm sorry, but I need a statement that expresses an emotion for me to analyze. Could you please provide a statement with an emotion so I can assess it for you?"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 4/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 8/10"
-"Happy: 0/10
-Sad: 2/10
-Mad: 5/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 6/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 7/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 5/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 8/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 6/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 6/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 7/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 4/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 2/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 3/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 6/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 0/10
-Scared: 6/10"
-"Happy: 2/10
-Sad: 3/10
-Mad: 4/10
-Scared: 1/10"
-"Happy: 1/10
-Sad: 4/10
-Mad: 6/10
-Scared: 2/10"
-"Sad: 3/10
-Mad: 2/10
-Scared: 8/10
-Happy: 1/10"
-"Sad: 3/10
-Mad: 2/10
-Scared: 9/10
-Happy: 1/10"
-"Sad: 2/10
-Mad: 1/10
-Scared: 9/10
-Happy: 1/10"
-"Sad: 4/10
-Mad: 3/10
-Scared: 2/10
-Happy: 1/10"
-"Sad: 4/10
-Mad: 3/10
-Scared: 2/10
-Happy: 1/10"
-"Sad: 2/10
-Mad: 1/10
-Scared: 3/10
-Happy: 4/10"
-"Sad: 2/10
-Mad: 1/10
-Scared: 3/10
-Happy: 4/10"
-"Happy: 9/10
-Sad: 1/10
-Mad: 1/10
-Scared: 1/10"
-"Happy: 9/10
-Sad: 1/10
-Mad: 1/10
-Scared: 1/10"
-"Happy: 10/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 10/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 10/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 10/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 10/10
-Sad: 0/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 5/10
-Sad: 5/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 10/10
-Mad: 0/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 10/10
-Mad: 0/10
-Scared: 10/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 10/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 10/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 10/10
-Scared: 0/10"
-"Happy: 0/10
-Sad: 0/10
-Mad: 10/10
-Scared: 0/10"
+{'emotion': 'happy', 'probability': 0.8}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.5}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.6}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.3}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.8}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.6}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.5}
+{'emotion': 'mad', 'probability': 0.3}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.6}
+{'emotion': 'mad', 'probability': 0.2}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.3}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.2}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.3}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.3}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.2}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.5}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.8}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.0}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.2}
+{'emotion': 'happy', 'probability': 0.6}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.5}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.6}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.9}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.8}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.7}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
+{'emotion': 'happy', 'probability': 0.6}
+{'emotion': 'sad', 'probability': 0.0}
+{'emotion': 'mad', 'probability': 0.0}
+{'emotion': 'scared', 'probability': 0.0}
