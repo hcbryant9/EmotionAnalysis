@@ -6,7 +6,7 @@ import joblib
 import numpy as np
 import re
 import json
-from prometheus_client import start_http_server, Counter, generate_latest
+from prometheus_client import start_http_server, Counter, generate_latest, Gauge
 import warnings
 
 #from visualization import update_emotion_probability, plot_emotion_graphs
@@ -28,6 +28,7 @@ SENTIMENT_PATH = 'data/sentiment/data.txt'
 # Define a dictionary to store emotion probabilities
 sentiment_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Scared": 0.0}
 face_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Anxious": 0.0}
+
 
 # Route to receive data from the Unity game
 @app.route('/receive_data', methods=['POST'])
@@ -80,39 +81,61 @@ def predict_while_collect():
     return jsonify(prediction), 200
 
 
+
 @app.route('/receive_voice_emotion', methods=['POST'])
 def receive_voice_emotion():
     '''
     This route is for receiving the results of chat gpt emotion prediction
     The result will be stored and sent on to prometheus
+    There is an issue rn when gpt spits out a message like "sorry can't derive an emotion instead of the expected output.
+    to do -> fix the  problem mentioned above.
     '''
-    data = request.data.decode('utf-8')
+    try:
+        data = request.data.decode('utf-8')
+        
+        # Process data here, assuming it was successful
+        # Assuming data is in the format "Happy: 9/10 Sad: 1/10 Mad: 1/10 Scared: 1/10"
+        emotions = data.split()
+        if len(emotions) < 8:
+            raise ValueError("Incomplete emotion data received")
+
+        emotion_values = [float(emotion.split('/')[0]) / 10 for emotion in emotions[1::2]]
+        emotion_labels = ["Happy", "Sad", "Mad", "Scared"]  # Assuming this order of emotions
+        
+        # Validate the length of emotion values
+        if len(emotion_values) != len(emotion_labels):
+            raise ValueError("Mismatch between emotion labels and values")
+        
+        # Update emotion probabilities
+        sentiment_probability = {}
+        for label, value in zip(emotion_labels, emotion_values):
+            sentiment_probability[label] = value
+
+        # Convert to JSON format
+        json_data = []
+        for label, value in sentiment_probability.items():
+            json_data.append({"emotion": label.lower(), "probability": value})
+
+        # Writing data to a .txt file
+        file_path = 'data/sentiment/data.txt'
+        with open(file_path, 'a') as file:
+            for item in json_data:
+                file.write(str(item) + '\n')
+
+        response_data = {"message": "Voice emotion received successfully"}
+        return jsonify(response_data)
     
-    # Process data here, assuming it was successful
-    # Assuming data is in the format "Happy: 9/10 Sad: 1/10 Mad: 1/10 Scared: 1/10"
-    emotions = data.split()
-    emotion_values = [float(emotion.split('/')[0]) / 10 for emotion in emotions[1::2]]
-    emotion_labels = ["Happy", "Sad", "Mad", "Scared"]  # Assuming this order of emotions
+    except ValueError as e:
+        # Handle ValueError exceptions
+        error_message = str(e)
+        response_data = {"error": error_message}
+        return jsonify(response_data), 400  # Bad Request status code
     
-    # Update emotion probabilities
-    for label, value in zip(emotion_labels, emotion_values):
-        sentiment_probability[label] = value
-
-    # Convert to JSON format
-    json_data = []
-    for label, value in sentiment_probability.items():
-        json_data.append({"emotion": label.lower(), "probability": value})
-
-    # Writing data to a .txt file
-    file_path = 'data/sentiment/data.txt'
-    with open(file_path, 'a') as file:
-        for item in json_data:
-            file.write(str(item) + '\n')
-
-    response_data = {"message": "Voice emotion received successfully"}
-
-    return jsonify(response_data)
-
+    except Exception as e:
+        # Handle any other unexpected exceptions
+        error_message = "An unexpected error occurred: " + str(e)
+        response_data = {"error": error_message}
+        return jsonify(response_data), 500  # Internal Server Error status code
 
 
 @app.route('/receive_stt', methods=['POST'])
@@ -142,37 +165,26 @@ def metrics():
     '''
     Expose Prometheus metrics including data received via STT, sentiment, and face predictions for visualization
     '''
-    # Retrieve data metrics
-    stt_data_metric = get_last_stt(STT_PATH)
-    happy_sentiment_metric = face_probability["Happy"]
-    
-    
     # Construct Prometheus exposition format response
     metrics_text = (
-        f"# HELP happy_face_metric Probability of Happy Emotion from Face Prediction Model"
-        f"# TYPE happy_face_metric gauge\n"
+
         f"happy_face_metric {face_probability['Happy']}\n"
-        f"# HELP sad_face_metric Probability of Sad Emotion from Face Prediction Model"
-        f"# TYPE sad_face_metric gauge\n"
+
         f"sad_face_metric {face_probability['Sad']}\n"
-        f"# HELP mad_face_metric Probability of Mad Emotion from Face Prediction Model"
-        f"# TYPE mad_face_metric gauge\n"
+
         f"mad_face_metric {face_probability['Mad']}\n"
-        f"# HELP anxious_face_metric Probability of Anxious Emotion from Face Prediction Model"
-        f"# TYPE anxious_face_metric gauge\n"
+       
         f"anxious_face_metric {face_probability['Anxious']}\n"
-        f"# HELP happy_sentiment_metric Probability of Happy Emotion from STT"
-        f"# TYPE happy_sentiment_metric gauge\n"
+        
         f"happy_sentiment_metric {sentiment_probability['Happy']}\n"
-        f"# HELP sad_sentiment_metric Probability of Sad Emotion from STT"
-        f"# TYPE sad_sentiment_metric gauge\n"
+        
         f"sad_sentiment_metric {sentiment_probability['Sad']}\n"
-        f"# HELP mad_sentiment_metric Probability of Mad Emotion from STT"
-        f"# TYPE mad_sentiment_metric gauge\n"
+        
         f"mad_sentiment_metric {sentiment_probability['Mad']}\n"
-        f"# HELP anxious_sentiment_metric Probability of Anxious Emotion from STT"
-        f"# TYPE anxious_sentiment_metric gauge\n"
+        
         f"anxious_sentiment_metric {sentiment_probability['Scared']}\n"
+       
+        
         
     )
 
@@ -212,16 +224,6 @@ def make_prediction(data):
         }
     } 
 
-
-# Function to get the last non-empty line of a file
-def get_last_stt(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        non_empty_lines = [line.strip() for line in lines if line.strip()]  # Remove empty lines
-        if non_empty_lines:
-            return non_empty_lines[-1]
-        else:
-            return ""
 
 
 def get_last_face(file_path):
