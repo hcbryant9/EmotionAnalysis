@@ -8,6 +8,7 @@ import re
 import json
 from prometheus_client import start_http_server, Counter, generate_latest, Gauge
 import warnings
+import logging
 
 #from visualization import update_emotion_probability, plot_emotion_graphs
 ''' 
@@ -26,8 +27,8 @@ STT_PATH = 'data/stt/data.txt'
 SENTIMENT_PATH = 'data/sentiment/data.txt'
 
 # Define a dictionary to store emotion probabilities
-sentiment_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Scared": 0.0}
-face_probability = {"Happy": 0.0, "Sad": 0.0, "Mad": 0.0, "Anxious": 0.0}
+sentiment_probability = {"Happy": 0, "Sad": 0, "Mad": 0, "Scared": 0}
+face_probability = {"Happy": 0, "Sad": 0, "Mad": 0, "Anxious": 0}
 
 
 # Route to receive data from the Unity game
@@ -90,6 +91,9 @@ def receive_voice_emotion():
     There is an issue rn when gpt spits out a message like "sorry can't derive an emotion instead of the expected output.
     to do -> fix the  problem mentioned above.
     '''
+
+    global sentiment_probability
+
     try:
         data = request.data.decode('utf-8')
         
@@ -106,21 +110,14 @@ def receive_voice_emotion():
         if len(emotion_values) != len(emotion_labels):
             raise ValueError("Mismatch between emotion labels and values")
         
+        #print("Sentiment Probability:", emotion_values)
         # Update emotion probabilities
-        sentiment_probability = {}
         for label, value in zip(emotion_labels, emotion_values):
-            sentiment_probability[label] = value
-
-        # Convert to JSON format
-        json_data = []
-        for label, value in sentiment_probability.items():
-            json_data.append({"emotion": label.lower(), "probability": value})
-
-        # Writing data to a .txt file
-        file_path = 'data/sentiment/data.txt'
-        with open(file_path, 'a') as file:
-            for item in json_data:
-                file.write(str(item) + '\n')
+            if(value!=0.0):
+                sentiment_probability[label] = value * 10
+            else:
+                sentiment_probability[label] = 0
+        
 
         response_data = {"message": "Voice emotion received successfully"}
         return jsonify(response_data)
@@ -166,6 +163,10 @@ def metrics():
     Expose Prometheus metrics including data received via STT, sentiment, and face predictions for visualization
     '''
     # Construct Prometheus exposition format response
+
+    # Configure logging
+    #logging.basicConfig(filename='sentiment_log.txt', level=logging.INFO)
+
     metrics_text = (
 
         f"happy_face_metric {face_probability['Happy']}\n"
@@ -187,7 +188,7 @@ def metrics():
         
         
     )
-
+    #logging.info("Sentiment Probabilities: %s", sentiment_probability)
     # Create a response with the metrics text
     response = make_response(metrics_text)
     response.mimetype = "text/plain"
@@ -199,6 +200,7 @@ def metrics():
 
 #This script makes a prediction
 def make_prediction(data):
+    global face_probability
     warnings.filterwarnings("ignore")
     rf_classifier = joblib.load('models/pickle/random_forest_model.pkl')
 
@@ -212,9 +214,9 @@ def make_prediction(data):
     # Update face probabilities
     for emotion in face_probability:
         if emotion == predicted_class_index_rf:
-            face_probability[emotion] = prob_value_rf
+            face_probability[emotion] = prob_value_rf * 10
         else:
-            face_probability[emotion] = 0.0
+            face_probability[emotion] = 0
 
     # Return prediction
     return {
