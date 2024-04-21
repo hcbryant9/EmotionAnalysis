@@ -23,7 +23,6 @@ not including the specified emotion. Then sends this to the .pkl files found in 
 '''
 app = Flask(__name__)
 FACE_PATH = 'data/face/data.txt'
-STT_PATH = 'data/stt/data.txt'
 SENTIMENT_PATH = 'data/sentiment/data.txt'
 
 # Define a dictionary to store emotion probabilities
@@ -135,32 +134,11 @@ def receive_voice_emotion():
         return jsonify(response_data), 500  # Internal Server Error status code
 
 
-@app.route('/receive_stt', methods=['POST'])
-def receive_stt():
-    '''
-    This route is for receiving the speech to text from WitAI in Unity
-    The result will be stored and sent on to prometheus
-    '''
-    data = request.data.decode('utf-8')
-    
-    # Process data here, assuming it was successful
-    response_data = {"message": "Speech to text received successfully"}
-
-    # Writing data to a .txt file in CSV format
-    file_path = 'data/stt/data.txt'
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, 'a') as file:
-        writer = csv.writer(file)
-        writer.writerow([data])
-
-    return jsonify(response_data), 200
-
-
 
 @app.route('/metrics')
 def metrics():
     '''
-    Expose Prometheus metrics including data received via STT, sentiment, and face predictions for visualization
+    Expose Prometheus metrics - sentiment and face predictions for visualization
     '''
     # Construct Prometheus exposition format response
 
@@ -201,7 +179,7 @@ def metrics():
 #This script makes a prediction
 def make_prediction(data):
     global face_probability
-    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore") #warnings -> numbers not having labels, but they're in the same order every time so obselete
     rf_classifier = joblib.load('models/pickle/random_forest_model.pkl')
 
     new_data = pd.DataFrame([data])  #convert received data to a DataFrame
@@ -211,10 +189,10 @@ def make_prediction(data):
     # get the emotion
     predicted_class_index_rf = rf_classifier.predict(new_data)[0]
     
-    # Update face probabilities
+    # update face probabilities (rounds up to the nearest int after mult by 10)
     for emotion in face_probability:
         if emotion == predicted_class_index_rf:
-            face_probability[emotion] = prob_value_rf * 10
+            face_probability[emotion] = int(prob_value_rf * 10)
         else:
             face_probability[emotion] = 0
 
@@ -225,23 +203,6 @@ def make_prediction(data):
             'probability': prob_value_rf
         }
     } 
-
-
-
-def get_last_face(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        if lines:
-            # Get the last line in the file
-            last_line = lines[-1].strip()
-            # Assuming the data is stored in JSON format, you can parse it
-            prediction_data = json.loads(last_line)
-            # Extract emotion and probability from the prediction data
-            emotion = prediction_data['random_forest']['emotion']
-            probability = prediction_data['random_forest']['probability']
-            return emotion, probability
-        else:
-            return None, None
 
 if __name__ == '__main__':
     # Start HTTP server to expose metrics on port 8000 to prometheus
