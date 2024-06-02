@@ -125,6 +125,7 @@ def receive_voice_emotion():
         # Handle ValueError exceptions
         error_message = str(e)
         response_data = {"error": error_message}
+    
         return jsonify(response_data), 400  # Bad Request status code
     
     except Exception as e:
@@ -135,42 +136,42 @@ def receive_voice_emotion():
 
 
 
-@app.route('/metrics')
-def metrics():
-    '''
-    Expose Prometheus metrics - sentiment and face predictions for visualization
-    '''
-    # Construct Prometheus exposition format response
+# @app.route('/metrics')
+# def metrics():
+#     '''
+#     Expose Prometheus metrics - sentiment and face predictions for visualization
+#     '''
+#     # Construct Prometheus exposition format response
 
-    # Configure logging
-    #logging.basicConfig(filename='sentiment_log.txt', level=logging.INFO)
+#     # Configure logging
+#     #logging.basicConfig(filename='sentiment_log.txt', level=logging.INFO)
 
-    metrics_text = (
+#     metrics_text = (
 
-        f"happy_face_metric {face_probability['Happy']}\n"
+#         f"happy_face_metric {face_probability['Happy']}\n"
 
-        f"sad_face_metric {face_probability['Sad']}\n"
+#         f"sad_face_metric {face_probability['Sad']}\n"
 
-        f"mad_face_metric {face_probability['Mad']}\n"
+#         f"mad_face_metric {face_probability['Mad']}\n"
        
-        f"anxious_face_metric {face_probability['Anxious']}\n"
+#         f"anxious_face_metric {face_probability['Anxious']}\n"
         
-        f"happy_sentiment_metric {sentiment_probability['Happy']}\n"
+#         f"happy_sentiment_metric {sentiment_probability['Happy']}\n"
         
-        f"sad_sentiment_metric {sentiment_probability['Sad']}\n"
+#         f"sad_sentiment_metric {sentiment_probability['Sad']}\n"
         
-        f"mad_sentiment_metric {sentiment_probability['Mad']}\n"
+#         f"mad_sentiment_metric {sentiment_probability['Mad']}\n"
         
-        f"anxious_sentiment_metric {sentiment_probability['Scared']}\n"
+#         f"anxious_sentiment_metric {sentiment_probability['Scared']}\n"
        
         
         
-    )
-    #logging.info("Sentiment Probabilities: %s", sentiment_probability)
-    # Create a response with the metrics text
-    response = make_response(metrics_text)
-    response.mimetype = "text/plain"
-    return response
+#     )
+#     #logging.info("Sentiment Probabilities: %s", sentiment_probability)
+#     # Create a response with the metrics text
+#     response = make_response(metrics_text)
+#     response.mimetype = "text/plain"
+#     return response
 
 
 
